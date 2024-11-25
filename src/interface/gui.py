@@ -163,15 +163,22 @@ def ventana_ver_contraseñas():
         mostrar_contraseñas(contraseñas_ordenadas)
 
     def copiar_contraseña():
-        seleccion = lista_contraseñas.curselection()
-        if seleccion:
-            cuenta = contraseñas[seleccion[0]][0]
-            contraseña = contraseñas[seleccion[0]][1]
-            copiar_al_portapapeles(contraseña)
-            messagebox.showinfo("Copiado", f"Contraseña de '{cuenta}' copiada al portapapeles.")
-        else:
-            messagebox.showwarning("Selección", "Por favor, selecciona una cuenta para copiar la contraseña.")
+    seleccion = lista_contraseñas.curselection()
+    if seleccion:
+        cuenta = contraseñas[seleccion[0]][0]
+        contraseña_encriptada = contraseñas[seleccion[0]][1]
 
+        try:
+            from src.logica.security import desencriptar_contraseña  # Asegúrate de importar la función desencriptar_contraseña
+            contraseña_desencriptada = desencriptar_contraseña(contraseña_encriptada)  # Desencripta la contraseña
+            copiar_al_portapapeles(contraseña_desencriptada)  # Copia la contraseña desencriptada al portapapeles
+            messagebox.showinfo("Copiado", f"Contraseña de '{cuenta}' copiada al portapapeles.")
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo copiar la contraseña: {e}")
+    else:
+        messagebox.showwarning("Selección", "Por favor, selecciona una cuenta para copiar la contraseña.")
+
+    
     def editar_seleccion():
         seleccion = lista_contraseñas.curselection()
         if seleccion:

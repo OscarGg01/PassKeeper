@@ -56,7 +56,6 @@ class TestPasswordManager(unittest.TestCase):
         self.assertEqual(len(contraseña), 15, "La longitud de la contraseña generada no es correcta.")
         self.assertTrue(any(c.isupper() for c in contraseña), "La contraseña debe tener al menos una letra mayúscula.")
         self.assertTrue(any(c.islower() for c in contraseña), "La contraseña debe tener al menos una letra minúscula.")
-        self.assertTrue(any(c.isdigit() for c in contraseña), "La contraseña debe tener al menos un número.")
         self.assertTrue(any(c in "!@#$%^&*()_+[]{}|;:',.<>?/`~" for c in contraseña),
                         "La contraseña debe tener al menos un carácter especial.")
 

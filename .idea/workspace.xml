@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5e3a822e-8eaf-42ee-a57c-f6256404f015" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/PassKepper.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PassKepper.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/interface/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/interface/gui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/logica/security.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/logica/security.py" afterDir="false" />
-    </list>
+    <list default="true" id="5e3a822e-8eaf-42ee-a57c-f6256404f015" name="Changes" comment="Cambios de código" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -150,10 +144,23 @@
       <updated>1732507284239</updated>
       <workItem from="1732507286926" duration="3000" />
     </task>
+    <task id="LOCAL-00001" summary="Cambios de código">
+      <option name="closed" value="true" />
+      <created>1732574426532</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1732574426532</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Cambios de código" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cambios de código" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

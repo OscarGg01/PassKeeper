@@ -119,20 +119,34 @@ def exportar_a_excel(archivo=None):
             cursor.execute("SELECT cuenta, contraseña, categoria FROM contraseñas")
             datos = cursor.fetchall()
 
+        # Desencriptar las contraseñas antes de exportarlas
+        from src.logica.security import desencriptar_contraseña  # Asegúrate de tener importada esta función
+        datos_desencriptados = []
+        for cuenta, contraseña_encriptada, categoria in datos:
+            try:
+                contraseña_desencriptada = desencriptar_contraseña(contraseña_encriptada)
+            except Exception as e:
+                contraseña_desencriptada = f"Error: {e}"  # Para manejar casos donde la desencriptación falle
+            datos_desencriptados.append((cuenta, contraseña_desencriptada, categoria))
+
         # Si no se proporciona un archivo, usar filedialog
         if not archivo:
             archivo = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")])
 
         if archivo:
             columnas = ["cuenta", "contraseña", "categoria"]
-            df = pd.DataFrame(datos, columns=columnas)
+            # Crear el DataFrame con los datos desencriptados
+            df = pd.DataFrame(datos_desencriptados, columns=columnas)
             df.to_excel(archivo, index=False)
+
             # Registrar en el historial para cada cuenta exportada
             for cuenta, _, _ in datos:
                 registrar_historial("exportado", cuenta)
+            
             messagebox.showinfo("Éxito", f"Contraseñas exportadas a {archivo}")
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo exportar: {e}")
+
 
 
 # Importar contraseñas desde un archivo Excel

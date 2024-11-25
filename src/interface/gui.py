@@ -40,7 +40,7 @@ def ventana_principal():
     root.config(bg="#013161")  # Cambiar el color de fondo
 
     try:
-        imagen = Image.open("seguridad.png")  # Cambia "seguridad.png" a la ruta correcta de tu imagen
+        imagen = Image.open("D:\\Proyectos\\PassKeeper\\seguridad.png")  # Cambia "seguridad.png" a la ruta correcta de tu imagen
         logo_img = ImageTk.PhotoImage(imagen)
         logo_label = tk.Label(root, image=logo_img, bg="#013161")  # Ajusta el color de fondo
         logo_label.pack(pady=10)
@@ -163,20 +163,20 @@ def ventana_ver_contraseñas():
         mostrar_contraseñas(contraseñas_ordenadas)
 
     def copiar_contraseña():
-    seleccion = lista_contraseñas.curselection()
-    if seleccion:
-        cuenta = contraseñas[seleccion[0]][0]
-        contraseña_encriptada = contraseñas[seleccion[0]][1]
+        seleccion = lista_contraseñas.curselection()
+        if seleccion:
+            cuenta = contraseñas[seleccion[0]][0]
+            contraseña_encriptada = contraseñas[seleccion[0]][1]
 
-        try:
-            from src.logica.security import desencriptar_contraseña  # Asegúrate de importar la función desencriptar_contraseña
-            contraseña_desencriptada = desencriptar_contraseña(contraseña_encriptada)  # Desencripta la contraseña
-            copiar_al_portapapeles(contraseña_desencriptada)  # Copia la contraseña desencriptada al portapapeles
-            messagebox.showinfo("Copiado", f"Contraseña de '{cuenta}' copiada al portapapeles.")
-        except Exception as e:
-            messagebox.showerror("Error", f"No se pudo copiar la contraseña: {e}")
-    else:
-        messagebox.showwarning("Selección", "Por favor, selecciona una cuenta para copiar la contraseña.")
+            try:
+                from src.logica.security import desencriptar_contraseña  # Asegúrate de importar la función desencriptar_contraseña
+                contraseña_desencriptada = desencriptar_contraseña(contraseña_encriptada)  # Desencripta la contraseña
+                copiar_al_portapapeles(contraseña_desencriptada)  # Copia la contraseña desencriptada al portapapeles
+                messagebox.showinfo("Copiado", f"Contraseña de '{cuenta}' copiada al portapapeles.")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo copiar la contraseña: {e}")
+        else:
+            messagebox.showwarning("Selección", "Por favor, selecciona una cuenta para copiar la contraseña.")
 
     
     def editar_seleccion():

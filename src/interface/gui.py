@@ -16,7 +16,7 @@ import pyperclip
 # Importar pandas
 
 BG_COLOR = "#013161"
-BTN_COLOR = {"Agregar": "#DAF7A6", "Ver": "#FFC300", "Historial": "#FF5733", "Exportar": "#C70039", "Importar": "#900C3F", "Salir": "#581845"}
+BTN_COLOR = {"Agregar": "#DAF7A6", "Ver": "#DAF7A6", "Buscar": "#FFC300", "Historial": "#FF5733", "Exportar": "#C70039", "Importar": "#900C3F", "Salir": "#581845"}
 FONT = ("Century Gothic", 10)
 
 def centrar_ventana(ventana, ancho, alto):
@@ -36,11 +36,11 @@ def ventana_principal():
     root = tk.Tk()
     root.title("Gestión de Contraseñas")
     root.geometry("600x500")
-    centrar_ventana(root, 600, 500)
+    centrar_ventana(root, 600, 600)
     root.config(bg="#013161")  # Cambiar el color de fondo
 
     try:
-        imagen = Image.open("D:\\Proyectos\\PassKeeper\\seguridad.png")  # Cambia "seguridad.png" a la ruta correcta de tu imagen
+        imagen = Image.open("D:\\Programa\\PassKeeper\\seguridad.png")  # Cambia "seguridad.png" a la ruta correcta de tu imagen
         logo_img = ImageTk.PhotoImage(imagen)
         logo_label = tk.Label(root, image=logo_img, bg="#013161")  # Ajusta el color de fondo
         logo_label.pack(pady=10)
@@ -66,6 +66,7 @@ def ventana_principal():
     botones = [
         ("Agregar Contraseña", ventana_agregar_contraseña, "Agregar"),
         ("Ver Contraseñas", ventana_ver_contraseñas, "Ver"),
+        ("Buscar Contraseña", ventana_buscar_contraseña, "Buscar"),
         ("Ver Historial", ventana_historial, "Historial"),
         ("Exportar", exportar, "Exportar"),
         ("Importar", importar, "Importar"),
@@ -97,6 +98,7 @@ def ventana_agregar_contraseña():
     tk.Label(ventana, text="Cuenta:").pack()
     cuenta_entry = tk.Entry(ventana, width=30)
     cuenta_entry.pack()
+    ventana.config(bg="#013161")
 
     tk.Label(ventana, text="Contraseña:").pack()
     contraseña_entry = tk.Entry(ventana, show="*", width=30)
@@ -128,10 +130,94 @@ def ventana_agregar_contraseña():
     tk.Button(ventana, text="Guardar", command=guardar_contraseña).pack(pady=10)
     tk.Button(ventana, text="Generar Contraseña Aleatoria", command=copiar_contraseña_aleatoria).pack(pady=5)
 
+
+def ventana_buscar_contraseña():
+    ventana_buscar = tk.Toplevel()
+    ventana_buscar.title("Buscar Contraseña")
+    centrar_ventana(ventana_buscar, 400, 300)
+    ventana_buscar.config(bg="#013161")
+
+    tk.Label(ventana_buscar, text="Ingrese la cuenta a buscar:").pack(pady=10)
+
+    entrada_busqueda = tk.Entry(ventana_buscar, width=40)
+    entrada_busqueda.pack(pady=5)
+
+    resultado_label = tk.Label(ventana_buscar, text="", fg="blue", wraplength=350, justify="left")
+    resultado_label.pack(pady=10)
+
+    contraseña_oculta = tk.StringVar(value="")  # Variable para la contraseña en asteriscos o revelada
+    categoria_actual = tk.StringVar(value="")  # Variable para la categoría actual
+    es_revelada = [False]  # Lista mutable para rastrear el estado de la contraseña
+
+    def buscar():
+        cuenta_buscada = entrada_busqueda.get().strip()
+        if not cuenta_buscada:
+            messagebox.showwarning("Campo vacío", "Por favor, ingrese una cuenta para buscar.")
+            return
+
+        try:
+            contraseñas = obtener_contraseñas()  # Obtiene todas las contraseñas de la base de datos
+            for cuenta, contraseña_encriptada, categoria in contraseñas:
+                if cuenta.lower() == cuenta_buscada.lower():
+                    from src.logica.security import desencriptar_contraseña
+                    contraseña_desencriptada = desencriptar_contraseña(contraseña_encriptada)
+
+                    # Actualizamos las variables globales
+                    contraseña_oculta.set("******")  # Inicialmente oculta la contraseña con asteriscos
+                    categoria_actual.set(categoria)  # Guarda la categoría
+                    es_revelada[0] = False  # Reinicia el estado de revelado
+
+                    resultado_label.config(
+                        text=f"Cuenta: {cuenta}\nContraseña: {contraseña_oculta.get()}\nCategoría: {categoria_actual.get()}",
+                        fg="black"
+                    )
+                    return
+            resultado_label.config(text="No se encontró ninguna cuenta con ese nombre.", fg="red")
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo buscar la contraseña: {e}")
+
+    def revelar_contraseña():
+        cuenta_buscada = entrada_busqueda.get().strip()
+        if not cuenta_buscada:
+            messagebox.showwarning("Sin búsqueda", "Por favor, realice una búsqueda primero.")
+            return
+
+        if not es_revelada[0]:  # Si no está revelada
+            try:
+                contraseñas = obtener_contraseñas()
+                for cuenta, contraseña_encriptada, _ in contraseñas:
+                    if cuenta.lower() == cuenta_buscada.lower():
+                        from src.logica.security import desencriptar_contraseña
+                        contraseña_desencriptada = desencriptar_contraseña(contraseña_encriptada)
+                        contraseña_oculta.set(contraseña_desencriptada)
+                        es_revelada[0] = True  # Marca como revelada
+                        resultado_label.config(
+                            text=f"Cuenta: {cuenta}\nContraseña: {contraseña_oculta.get()}\nCategoría: {categoria_actual.get()}",
+                            fg="black"
+                        )
+                        return
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo revelar la contraseña: {e}")
+        else:  # Si ya está revelada, ocúltala de nuevo
+            contraseña_oculta.set("******")
+            es_revelada[0] = False
+            resultado_label.config(
+                text=f"Cuenta: {cuenta_buscada}\nContraseña: {contraseña_oculta.get()}\nCategoría: {categoria_actual.get()}",
+                fg="black"
+            )
+
+    tk.Button(ventana_buscar, text="Buscar", command=buscar).pack(pady=5)
+    tk.Button(ventana_buscar, text="Revelar Contraseña", command=revelar_contraseña).pack(pady=5)
+
+    ventana_buscar.mainloop()
+
+
+
 def ventana_ver_contraseñas():
     ventana = tk.Toplevel()
     ventana.title("Ver Contraseñas")
-    centrar_ventana(ventana, 500, 400)
+    centrar_ventana(ventana, 500, 500)
+    ventana.config(bg="#013161")
 
     tk.Label(ventana, text="Contraseñas almacenadas:").pack(pady=5)
 
@@ -148,9 +234,10 @@ def ventana_ver_contraseñas():
     contraseñas = obtener_contraseñas()
 
     def mostrar_contraseñas(lista):
+        """Muestra las contraseñas en el formato: Cuenta | **** | Categoría."""
         lista_contraseñas.delete(0, tk.END)
-        for cuenta, _, categoria in lista:
-            lista_contraseñas.insert(tk.END, f"Cuenta: {cuenta} | Categoría: {categoria}")
+        for cuenta, contraseña, categoria in lista:
+            lista_contraseñas.insert(tk.END, f"Cuenta: {cuenta} | Contraseña: *************** | Categoría: {categoria}")
 
     mostrar_contraseñas(contraseñas)
 
@@ -178,7 +265,22 @@ def ventana_ver_contraseñas():
         else:
             messagebox.showwarning("Selección", "Por favor, selecciona una cuenta para copiar la contraseña.")
 
-    
+    def revelar_contraseña():
+        """Revela la contraseña seleccionada desencriptándola."""
+        seleccion = lista_contraseñas.curselection()
+        if seleccion:
+            cuenta = contraseñas[seleccion[0]][0]
+            contraseña_encriptada = contraseñas[seleccion[0]][1]
+
+            try:
+                from src.logica.security import desencriptar_contraseña
+                contraseña_real = desencriptar_contraseña(contraseña_encriptada)
+                messagebox.showinfo("Revelar Contraseña", f"Cuenta: {cuenta}\nContraseña: {contraseña_real}")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo revelar la contraseña: {e}")
+        else:
+            messagebox.showwarning("Selección", "Por favor, selecciona una cuenta para revelar.")
+
     def editar_seleccion():
         seleccion = lista_contraseñas.curselection()
         if seleccion:
@@ -198,11 +300,10 @@ def ventana_ver_contraseñas():
         else:
             messagebox.showwarning("Selección", "Por favor, selecciona una cuenta para borrar.")
 
-    def importar_y_actualizar():
-        importar_desde_excel(actualizar_lista=actualizar_lista)
 
     tk.Button(ventana, text="Ordenar por Categoría", command=ordenar_por_categoria).pack(pady=5)
     tk.Button(ventana, text="Copiar Contraseña", command=copiar_contraseña).pack(pady=5)
+    tk.Button(ventana, text="Revelar Contraseña", command=revelar_contraseña).pack(pady=5)
     tk.Button(ventana, text="Editar Cuenta", command=editar_seleccion).pack(pady=5)
     tk.Button(ventana, text="Borrar Cuenta", command=borrar_seleccion).pack(pady=5)
     ventana.mainloop()
@@ -211,6 +312,7 @@ def ventana_editar_contraseña(cuenta):
     ventana = tk.Toplevel()
     ventana.title(f"Editar Contraseña: {cuenta}")
     centrar_ventana(ventana, 200, 150)
+    ventana.config(bg="#013161")
 
     tk.Label(ventana, text="Nueva Contraseña:").pack()
     nueva_contraseña_entry = tk.Entry(ventana, show="*", width=30)

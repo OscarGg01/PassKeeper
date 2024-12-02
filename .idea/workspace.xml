@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5e3a822e-8eaf-42ee-a57c-f6256404f015" name="Changes" comment="Cambios de código">
-      <change beforePath="$PROJECT_DIR$/.idea/PassKepper.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PassKepper.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/interface/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/interface/gui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +45,7 @@
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "D:/Programa/PassKeeper",
+    "last_opened_file_path": "D:/Final/PassKeeper",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -102,6 +99,7 @@
       <workItem from="1732507286926" duration="3000" />
       <workItem from="1733095187918" duration="14000" />
       <workItem from="1733095202557" duration="6698000" />
+      <workItem from="1733119812618" duration="83000" />
     </task>
     <task id="LOCAL-00001" summary="Cambios de código">
       <option name="closed" value="true" />
